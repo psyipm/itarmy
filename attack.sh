@@ -41,7 +41,7 @@ do
 
   echo "Attack stopped"
 
-  echo "Killing all running containers..."
+  echo "Stopping all running containers..."
   cleanup
 
   echo "Cooling down..."
