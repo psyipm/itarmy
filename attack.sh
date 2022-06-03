@@ -1,10 +1,10 @@
 #!/bin/bash
 
-SETTINGS_URL=https://raw.githubusercontent.com/psyipm/itarmy/main/.env
+SETTINGS_URL=https://raw.githubusercontent.com/psyipm/itarmy/main/settings.env
 
 function load_settings () {
-  curl -s $SETTINGS_URL > .env
-  source .env
+  curl -s $SETTINGS_URL > settings.env
+  source settings.env
 }
 
 function load_targets () {
