@@ -21,7 +21,8 @@ function attack () {
 }
 
 function cleanup () {
-  docker stop $CONTAINER_NAME
+  docker stop $CONTAINER_NAME > /dev/null 2>&1
+  kill -9 $RESTART_PID > /dev/null 2>&1
 }
 
 function restart () {
@@ -34,14 +35,14 @@ do
   load_settings
 
   echo "Scheduling restart in $RESTART_IN seconds..."
-  restart&
+  restart & RESTART_PID=$!
 
   echo "Starting attack..."
   attack
 
   echo "Attack stopped"
 
-  echo "Stopping all running containers..."
+  echo "Cleaning up..."
   cleanup
 
   echo "Cooling down..."
