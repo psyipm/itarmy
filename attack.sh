@@ -21,7 +21,7 @@ function attack () {
 }
 
 function cleanup () {
-  docker kill $CONTAINER_NAME
+  docker stop $CONTAINER_NAME
 }
 
 function restart () {
