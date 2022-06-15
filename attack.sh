@@ -12,11 +12,10 @@ function load_targets () {
 }
 
 function attack () {
-  load_targets
+  # load_targets
 
   docker run $(echo $DOCKER_OPTIONS) \
     ghcr.io/porthole-ascend-cinnamon/mhddos_proxy:latest \
-    $(cat ./targets.lst) \
     $(echo $ATTACK_OPTIONS)
 }
 
