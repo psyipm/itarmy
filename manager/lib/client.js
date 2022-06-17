@@ -65,7 +65,7 @@ class Client {
   }
 
   disconnect () {
-    console.log("Closing client")
+    console.log(`Closing client ID ${this.id}`)
 
     this.client.close()
     clients.delete(this.id)
