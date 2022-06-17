@@ -1,6 +1,15 @@
 version: '3.5'
 
 services:
+  manager:
+    image: ipmdev/autoddos_manager
+    build: ./manager
+    networks:
+      - private
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
   runner:
     image: ipmdev/autoddos_runner
     build: ./runner
@@ -8,20 +17,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
     networks:
-      - runner
+      - private
+    depends_on:
+      - manager
     deploy:
       mode: global
-      placement:
-        constraints: [node.role == worker]
-
-  manager:
-    image: ipmdev/autoddos_manager
-    build: ./manager
-    networks:
-      - runner
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      # placement:
+      #   constraints: [node.role == worker]
 
 networks:
-  runner:
+  private:

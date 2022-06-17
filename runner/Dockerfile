@@ -1,9 +1,9 @@
-FROM alpinelinux/docker-cli
-
-RUN apk --no-cache add curl
+FROM node:gallium-alpine
 
 WORKDIR /home/app
 
-ADD . /home/app
+COPY . /home/app
 
-CMD ["sleep", "1000"]
+ENV PORT 3000
+
+CMD ["node", "index.js"]
