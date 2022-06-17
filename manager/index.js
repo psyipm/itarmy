@@ -2,7 +2,7 @@ const WebSocket = require("ws")
 
 const wsPort = 7071
 
-const wss = new WebSocket.Server({ port: wsPort, path: "/v1/subscribe" })
+const wss = new WebSocket.Server({ port: wsPort, path: "/v1/runner" })
 
 const { Client, COMMAND } = require("./lib/client")
 

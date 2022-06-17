@@ -2,7 +2,7 @@ const WebSocket = require("ws")
 const os = require("os")
 const { Docker } = require("docker-cli-js")
 
-const client = new WebSocket("ws://localhost:7071/v1/subscribe")
+const client = new WebSocket("ws://localhost:7071/v1/runner")
 
 client.addEventListener("open", (event) => {
   console.log("Connected")
@@ -60,4 +60,3 @@ const gracefulShutdown = async () => {
 
 process.on("SIGINT", gracefulShutdown)
 process.on("SIGTERM", gracefulShutdown)
-process.on("SIGKILL", gracefulShutdown)
