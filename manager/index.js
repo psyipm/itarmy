@@ -73,3 +73,18 @@ app.delete("/clients/:id", (req, res) => {
 app.listen(httpPort, () => {
   console.log(`API listening on port ${httpPort}`)
 })
+
+const gracefulShutdown = async () => {
+  console.log("Shutting down...")
+
+  Client.list().forEach(client => client.disconnect())
+
+  process.exit()
+}
+
+process.on("SIGINT", gracefulShutdown)
+process.on("SIGTERM", gracefulShutdown)
+
+process.on("exit", () => {
+  console.log("Exiting")
+})
