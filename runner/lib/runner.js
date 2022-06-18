@@ -16,30 +16,47 @@ const DOCKER_OPTIONS = [
   "--log-driver none"
 ]
 
+const STATUS = {
+  default: "default",
+  running: "running",
+  stopped: "stopped",
+}
+
 class Runner {
   constructor () {
     this.docker = new Docker()
+    this.status = STATUS.default
+    this.command = null
+    this.containerId = null
   }
 
   async start (options = {}) {
-    console.log("Starting...", options)
+    console.log("Starting...")
 
-    let dockerOptions = join([...DOCKER_OPTIONS, ...(options.dockerOptions || [])])
-    let commandArgs = join(options.commandArgs || [])
+    const dockerOptions = join([...DOCKER_OPTIONS, ...(options.dockerOptions || [])])
+    const commandArgs = join(options.commandArgs || [])
 
-    let command = `run ${dockerOptions} ${options.image} ${commandArgs}`
+    this.command = `run ${dockerOptions} ${options.image} ${commandArgs}`
+    const result = await this.docker.command(this.command)
 
-    console.log(command)
+    if (result.containerId) {
+      this.containerId = result.containerId
+      this.status = STATUS.running
+    }
 
-    let result = await this.docker.command(command)
-
-    console.log(result)
-
-    return result
+    return await this.getStatus()
   }
 
   async stop () {
     console.log("Stopping...")
+  }
+
+  async getStatus () {
+    const statusInfo = { status: this.status, containerId: this.containerId }
+
+    console.log(statusInfo)
+
+    return statusInfo
   }
 }
 
