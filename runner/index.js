@@ -18,13 +18,23 @@ client.addEventListener("open", async (event) => {
   server.send(JSON.stringify(payload))
 })
 
-client.addEventListener("message", async (data) => {
-  const message = JSON.parse(data.data)
+client.addEventListener("message", async (event) => {
+  const server = event.target
+
+  const message = JSON.parse(event.data)
   const { command, options } = message
 
   switch (command) {
     case "start":
       await runner.start(options)
+
+      setInterval(async () => {
+        server.send(JSON.stringify({
+          command: "stats",
+          options: await runner.getStatus()
+        }))
+      }, options.reportInterval * 1000)
+
       break;
 
     case "stop":
