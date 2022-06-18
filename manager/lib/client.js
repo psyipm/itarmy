@@ -29,6 +29,8 @@ class Client {
       return this
     }
 
+    console.log(options)
+
     this.options = options
     this.status = STATUS.subscribed
 
