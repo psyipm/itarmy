@@ -48,9 +48,9 @@ client.addEventListener("message", async (event) => {
 })
 
 client.addEventListener("close", async () => {
-  await runner.stop()
+  console.log("Server disconnected")
 
-  console.log("Closing")
+  await gracefulShutdown()
 })
 
 const gracefulShutdown = async () => {

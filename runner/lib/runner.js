@@ -67,8 +67,6 @@ class Runner {
 
   async getStatus () {
     if (this.status == STATUS.exited) {
-      console.log(this)
-
       return { status: this.status }
     }
 
