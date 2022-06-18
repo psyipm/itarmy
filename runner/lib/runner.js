@@ -32,6 +32,9 @@ class Runner {
   }
 
   async start (options = {}) {
+    if (this.status == STATUS.running)
+      return await this.getStatus()
+
     console.log("Starting...")
 
     const dockerOptions = join([...DOCKER_OPTIONS, ...(options.dockerOptions || [])])
@@ -49,6 +52,9 @@ class Runner {
   }
 
   async stop () {
+    if (this.status != STATUS.running)
+      return await this.getStatus()
+
     console.log("Stopping...")
 
     try {
