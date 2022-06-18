@@ -1,10 +1,12 @@
 const WebSocket = require("ws")
 
 const Runner = require("./lib/runner")
+const Scheduler = require("./lib/scheduler")
 const settings = require("./lib/settings")
 
 const client = new WebSocket(settings.manager.url)
 const runner = new Runner()
+const scheduler = new Scheduler()
 
 client.addEventListener("open", async (event) => {
   console.log("Connected")
@@ -28,17 +30,23 @@ client.addEventListener("message", async (event) => {
     case "start":
       await runner.start(options)
 
-      setInterval(async () => {
+      scheduler.schedule(async () => {
         server.send(JSON.stringify({
           command: "stats",
           options: await runner.getStatus()
         }))
-      }, options.reportInterval * 1000)
+      }, options.reportInterval)
+
+      scheduler.schedule(async () => {
+        await runner.stop()
+        await runner.start(options)
+      }, options.restartInterval)
 
       break;
 
     case "stop":
       await runner.stop()
+      scheduler.clearAll()
       break;
 
     default:
