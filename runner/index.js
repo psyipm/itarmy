@@ -1,29 +1,18 @@
 const WebSocket = require("ws")
-const os = require("os")
-const axios = require("axios")
 
 const Runner = require("./lib/runner")
 const settings = require("./lib/settings")
 
 const client = new WebSocket(settings.manager.url)
-
 const runner = new Runner()
-
-const GET_IP_URL = "https://api.myip.com"
 
 client.addEventListener("open", async (event) => {
   console.log("Connected")
 
   const server = event.target
-  const network = await axios.get(GET_IP_URL)
-
   const payload = {
     command: "subscribe",
-    options: {
-      hostname: os.hostname(),
-      network: network.data,
-      cpus: os.cpus().length,
-    }
+    options: await Runner.info()
   }
 
   server.send(JSON.stringify(payload))

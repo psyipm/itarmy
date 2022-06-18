@@ -1,4 +1,9 @@
+const os = require("os")
+const axios = require("axios")
+
 const { Docker } = require("docker-cli-js")
+
+const NETWORK_INFO_URL = "https://api.myip.com"
 
 const join = (items) => {
   return [...new Set(items)].join(" ")
@@ -35,6 +40,16 @@ class Runner {
 
   async stop () {
     console.log("Stopping...")
+  }
+}
+
+Runner.info = async () => {
+  const network = await axios.get(NETWORK_INFO_URL)
+
+  return {
+    hostname: os.hostname(),
+    network: network.data,
+    cpus: os.cpus().length,
   }
 }
 
