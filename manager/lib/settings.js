@@ -1,4 +1,9 @@
 module.exports = {
+  manager: {
+    httpPort: process.env.HTTP_PORT || 3003,
+    wsPort: process.env.WS_PORT || 7071,
+  },
+
   runner: {
     dockerOptions: [
       "--cpus=.5",

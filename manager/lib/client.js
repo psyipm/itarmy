@@ -92,11 +92,15 @@ Client.list = () => {
   return clients
 }
 
+Client.findById = (id) => {
+  return clients.get(id)
+}
+
 Client.closeDisconnected = () => {
   clients.forEach((client) => client.close())
 }
 
-Client.asJson = () => {
+Client.listAsJson = () => {
   const data = []
 
   clients.forEach((client) => {
