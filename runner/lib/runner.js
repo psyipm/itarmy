@@ -12,8 +12,6 @@ const join = (items) => {
 const DOCKER_OPTIONS = [
   "-d",
   "--rm",
-  "--pull always",
-  "--log-driver none"
 ]
 
 const STATUS = {
