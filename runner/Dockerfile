@@ -1,9 +1,14 @@
-FROM node:gallium-alpine
+FROM alpinelinux/docker-cli
+
+RUN apk update \
+  && apk add --no-cache nodejs npm
 
 WORKDIR /home/app
 
-COPY . /home/app
+COPY package* /home/app
 
-ENV PORT 3000
+RUN npm install
+
+COPY . /home/app
 
 CMD ["node", "index.js"]
