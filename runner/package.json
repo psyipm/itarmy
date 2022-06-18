@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "docker-cli-js": "^2.9.0",
     "ws": "^8.8.0"
   }

