@@ -19,15 +19,18 @@ const DOCKER_OPTIONS = [
 const STATUS = {
   default: "default",
   running: "running",
-  stopped: "stopped",
+  exited: "exited",
+  error: "error"
 }
 
 class Runner {
   constructor () {
     this.docker = new Docker()
+
     this.status = STATUS.default
     this.command = null
     this.containerId = null
+    this.containerStats = {}
   }
 
   async start (options = {}) {
@@ -49,14 +52,41 @@ class Runner {
 
   async stop () {
     console.log("Stopping...")
+
+    try {
+      const result = await this.docker.command(`stop ${this.containerId}`)
+
+      if ((result.raw || "").includes(this.containerId)) {
+        this.containerId = null
+        this.status = STATUS.exited
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    return await this.getStatus()
   }
 
   async getStatus () {
-    const statusInfo = { status: this.status, containerId: this.containerId }
+    if (this.status == STATUS.exited) {
+      console.log(this)
 
-    console.log(statusInfo)
+      return { status: this.status }
+    }
 
-    return statusInfo
+    try {
+      const stats = await this.docker.command(`stats ${this.containerId} --no-stream --format "{{ json . }}"`)
+
+      this.containerStats = JSON.parse(stats.raw)
+      this.status = STATUS.running
+    } catch (error) {
+      console.log(error)
+
+      this.status = STATUS.error
+      this.containerStats = {}
+    }
+
+    return { status: this.status, containerId: this.containerId, stats: this.containerStats }
   }
 }
 
