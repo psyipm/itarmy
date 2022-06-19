@@ -1,6 +1,6 @@
 const WebSocket = require("ws")
 const { randomId } = require("./utils")
-const { runner: runnerSettings } = require("./settings")
+const { runnerSettings } = require("./runner_settings")
 
 const clients = new Map()
 
@@ -46,7 +46,7 @@ class Client {
 
     await this._send({
       command: COMMAND.start,
-      options: runnerSettings
+      options: runnerSettings(this.options)
     })
 
     this.status = STATUS.running
