@@ -32,6 +32,7 @@ class RunnerSettings {
   dockerOptions () {
     return commpact([
       this.cpuLimit(),
+      "-it",
       "--pull always",
       "--log-driver none",
       `--name ${CONTAINER_NAME}`
