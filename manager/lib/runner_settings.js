@@ -22,10 +22,6 @@ class RunnerSettings {
       commandArgs: this.commandArgs()
     }
 
-    console.log("Runner settings")
-    console.log(this.clientOptions)
-    console.log(data)
-
     return data
   }
 
