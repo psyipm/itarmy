@@ -5,6 +5,14 @@ const { Docker } = require("docker-cli-js")
 
 const NETWORK_INFO_URL = "https://api.myip.com"
 
+const getNetworkInfo = async () => {
+  const dataTemplate = { data: { ip: null, country: null, cc: null } }
+
+  return axios.get(NETWORK_INFO_URL)
+    .then(data => data)
+    .catch(() => dataTemplate)
+}
+
 const join = (items) => {
   return [...new Set(items)].join(" ")
 }
@@ -93,7 +101,7 @@ class Runner {
 }
 
 Runner.info = async () => {
-  const network = await axios.get(NETWORK_INFO_URL)
+  const network = await getNetworkInfo()
 
   return {
     hostname: os.hostname(),
