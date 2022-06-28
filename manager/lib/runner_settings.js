@@ -46,7 +46,7 @@ class RunnerSettings {
   }
 
   isLiteMode () {
-    return this.clientOptions.cpus <= 2
+    return this.clientOptions.cpus < 2
   }
 
   cpuLimit () {
