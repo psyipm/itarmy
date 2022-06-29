@@ -60,14 +60,14 @@ class RunnerSettings {
     if (this.isLiteMode())
       return 1000
 
-    return this.clientOptions.cpus * 1300
+    return this.clientOptions.cpus * 2000
   }
 
   copies () {
     if (this.isLiteMode())
       return 1
 
-    return this.clientOptions.cpus < 4 ? 1 : 2
+    return "auto"
   }
 
   vpn () {
