@@ -38,8 +38,7 @@ class RunnerSettings {
   commandArgs () {
     return commpact([
       "--itarmy",
-      "--http-methods GET STRESS",
-      `-t ${this.threads()}`,
+      this.threads(),
       `--copies ${this.copies()}`,
       this.vpn()
     ])
@@ -57,10 +56,10 @@ class RunnerSettings {
   }
 
   threads () {
-    if (this.isLiteMode())
-      return 1000
+    if (!this.isLiteMode())
+      return "" // auto
 
-    return this.clientOptions.cpus * 2000
+    return `-t 1000`
   }
 
   copies () {
